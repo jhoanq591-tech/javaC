@@ -164,7 +164,7 @@ Clases nuevas:
   - `cargarPrestamos()`: lee la tabla con JDBC y devuelve `List<Prestamo>`.
   - `filtrarPrestamosVencidos(lista)`: Stream + lambda, fecha de vencimiento anterior a hoy.
   - `filtrarPrestamosActivos(lista)`: Stream + lambda, estado `ACTIVO`.
-  - `mostrarResumen(lista)`: imprime activos, vencidos y monto total adeudado (monto + interés de los préstamos activos).
+  - `mostrarResumen(lista)`: imprime activos, vencidos y monto total adeudado (saldo pendiente de los activos: monto + interés - abonos).
   - Todos los métodos usan try-catch con mensajes claros (error de conexión, lista vacía, etc.).
 
 Cómo usarlo: entrar como administrador, `5. Reportes`, `3. Gestor de préstamos`.
@@ -181,6 +181,6 @@ Salida real (texto) en `docs/`:
 Total de prestamos:        7
 Prestamos activos:         4
 Prestamos vencidos:        3
-Monto total adeudado:      $5.335.000,00
+Monto total adeudado:      $5.135.000,00
 ============================================
 ```

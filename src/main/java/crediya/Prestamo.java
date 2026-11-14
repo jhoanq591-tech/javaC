@@ -14,9 +14,10 @@ public class Prestamo {
     private LocalDate fechaPrestamo;
     private LocalDate fechaVencimiento;
     private String estado;
+    private double pagado;
 
     public Prestamo(int id, int clienteId, double monto, double interes,
-                    LocalDate fechaPrestamo, LocalDate fechaVencimiento, String estado) {
+                    LocalDate fechaPrestamo, LocalDate fechaVencimiento, String estado, double pagado) {
         this.id = id;
         this.clienteId = clienteId;
         this.monto = monto;
@@ -24,6 +25,7 @@ public class Prestamo {
         this.fechaPrestamo = fechaPrestamo;
         this.fechaVencimiento = fechaVencimiento;
         this.estado = estado;
+        this.pagado = pagado;
     }
 
     public int getId() {
@@ -54,6 +56,15 @@ public class Prestamo {
         return estado;
     }
 
+    public double getPagado() {
+        return pagado;
+    }
+
+    /** Lo que falta por pagar: total con interes menos los abonos (nunca negativo). */
+    public double getSaldo() {
+        return Math.max(getMontoTotal() - pagado, 0);
+    }
+
     /** Monto mas el interes (%) = lo que el cliente debe pagar en total. */
     public double getMontoTotal() {
         return monto + (monto * interes / 100);
@@ -63,6 +74,6 @@ public class Prestamo {
     public String toString() {
         return "Prestamo #" + id + " | cliente " + clienteId + " | monto $" + monto
                 + " | interes " + interes + "% | prestado " + fechaPrestamo
-                + " | vence " + fechaVencimiento + " | " + estado;
+                + " | vence " + fechaVencimiento + " | " + estado + " | saldo $" + getSaldo();
     }
 }

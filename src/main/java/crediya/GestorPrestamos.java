@@ -20,8 +20,9 @@ public class GestorPrestamos {
     /** Carga todos los prestamos de la tabla prestamos en una lista de objetos Prestamo. */
     public List<Prestamo> cargarPrestamos() {
         List<Prestamo> lista = new ArrayList<>();
-        String sql = "SELECT id, cliente_id, monto, interes, fecha_prestamo, fecha_vencimiento, estado "
-                + "FROM prestamos ORDER BY id";
+        String sql = "SELECT p.id, p.cliente_id, p.monto, p.interes, p.fecha_prestamo, p.fecha_vencimiento, p.estado, "
+                + "(SELECT COALESCE(SUM(g.monto), 0) FROM pagos g WHERE g.prestamo_id = p.id) AS pagado "
+                + "FROM prestamos p ORDER BY p.id";
 
         try (Connection con = conexion.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -37,7 +38,8 @@ public class GestorPrestamos {
                         rs.getDouble("interes"),
                         prestamo == null ? null : prestamo.toLocalDate(),
                         vencimiento == null ? null : vencimiento.toLocalDate(),
-                        rs.getString("estado")));
+                        rs.getString("estado"),
+                        rs.getDouble("pagado")));
             }
 
             if (lista.isEmpty()) {
@@ -86,7 +88,7 @@ public class GestorPrestamos {
 
     /**
      * Imprime cuantos prestamos hay activos, cuantos vencidos y el monto total adeudado.
-     * Monto adeudado = suma del monto (con interes) de los prestamos ACTIVOS.
+     * Monto adeudado = saldo pendiente (monto + interes - abonos) de los prestamos ACTIVOS.
      */
     public void mostrarResumen(List<Prestamo> lista) {
         try {
@@ -97,7 +99,7 @@ public class GestorPrestamos {
             List<Prestamo> activos = filtrarPrestamosActivos(lista);
             List<Prestamo> vencidos = filtrarPrestamosVencidos(lista);
             double totalAdeudado = activos.stream()
-                    .mapToDouble(Prestamo::getMontoTotal)
+                    .mapToDouble(Prestamo::getSaldo)
                     .sum();
 
             System.out.println("=========== RESUMEN DE PRESTAMOS ===========");

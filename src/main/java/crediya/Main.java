@@ -205,7 +205,7 @@ public class Main {
     }
 
     public static void menuReportes(Scanner sc, Reportes reportes) {
-        System.out.println("-- REPORTES --\n1. Prestamos activos\n2. Prestamos morosos");
+        System.out.println("-- REPORTES --\n1. Prestamos activos\n2. Prestamos morosos\n3. Gestor de prestamos (activos, vencidos y resumen)");
         System.out.print("Opcion: ");
         String op = sc.nextLine();
         switch (op) {
