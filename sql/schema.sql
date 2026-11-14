@@ -16,7 +16,7 @@
 --   empleados(id, nombre, documento, rol, correo, salario, clave)
 --   clientes (id, nombre, documento, correo, telefono, clave, ingresos)
 --   prestamos(id, cliente_id -> clientes, empleado_id -> empleados,
---             monto, interes %, cuotas, fecha_inicio, estado)
+--             monto, interes %, cuotas, fecha_prestamo, fecha_vencimiento, estado)
 --   pagos    (id, prestamo_id -> prestamos, fecha_pago, monto)
 --
 --   ROLES:
@@ -25,7 +25,7 @@
 --
 --   ESTADOS de un prestamo:
 --     pendiente -> el cliente lo solicito y espera respuesta
---     aprobado  -> el administrador lo dio (se puede pagar)
+--     ACTIVO    -> el administrador lo aprobo (se puede pagar)
 --     cancelado -> el administrador lo rechazo
 --     pagado    -> ya se pago todo
 -- ============================================================
@@ -61,7 +61,8 @@ CREATE TABLE prestamos (
   monto DECIMAL(12,2),
   interes DECIMAL(5,2),
   cuotas INT,
-  fecha_inicio DATE,
+  fecha_prestamo DATE,
+  fecha_vencimiento DATE,
   estado VARCHAR(20),
   FOREIGN KEY (cliente_id) REFERENCES clientes(id),
   FOREIGN KEY (empleado_id) REFERENCES empleados(id)
@@ -92,17 +93,21 @@ INSERT INTO clientes (nombre, documento, correo, telefono, clave, ingresos) VALU
   ('Ana Torres',    '2002', 'ana@ejemplo.com',    '3003334444', 'ana123',    3000000),
   ('Pedro Castro',  '2003', 'pedro@ejemplo.com',  '3005556666', 'pedro123',  1500000);
 
--- Prestamo 1: aprobado y reciente (activo)
--- Prestamo 2: aprobado con mas de 30 dias (moroso)
--- Prestamo 3: ya pagado
+-- Prestamo 1: ACTIVO, vence en el futuro
+-- Prestamo 2: ACTIVO y VENCIDO (vencio hace 30 dias)
+-- Prestamo 3: ya pagado (vencido en fecha, pero no cuenta como activo)
 -- Prestamo 4: pendiente (esperando al administrador)
 -- Prestamo 5: cancelado por el administrador
-INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado) VALUES
-  (1, 1, 1000000, 5, 10, CURDATE(),                              'aprobado'),
-  (2, 1, 2000000, 4, 12, DATE_SUB(CURDATE(), INTERVAL 60 DAY),   'aprobado'),
-  (3, 1,  500000, 3,  5, DATE_SUB(CURDATE(), INTERVAL 90 DAY),   'pagado'),
-  (1, NULL, 300000, 5, 3, CURDATE(),                             'pendiente'),
-  (2, 1,  800000, 4,  4, DATE_SUB(CURDATE(), INTERVAL 20 DAY),   'cancelado');
+-- Prestamo 6: ACTIVO, vence en el futuro
+-- Prestamo 7: ACTIVO y VENCIDO (vencio hace 5 dias)
+INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_prestamo, fecha_vencimiento, estado) VALUES
+  (1, 1, 1000000, 5, 10, CURDATE(),                            DATE_ADD(CURDATE(), INTERVAL 10 MONTH),            'ACTIVO'),
+  (2, 1, 2000000, 4, 12, DATE_SUB(CURDATE(), INTERVAL 390 DAY), DATE_SUB(CURDATE(), INTERVAL 30 DAY),             'ACTIVO'),
+  (3, 1,  500000, 3,  5, DATE_SUB(CURDATE(), INTERVAL 240 DAY), DATE_SUB(CURDATE(), INTERVAL 90 DAY),             'pagado'),
+  (1, NULL, 300000, 5, 3, CURDATE(),                           DATE_ADD(CURDATE(), INTERVAL 3 MONTH),             'pendiente'),
+  (2, 1,  800000, 4,  4, DATE_SUB(CURDATE(), INTERVAL 20 DAY),  DATE_ADD(CURDATE(), INTERVAL 100 DAY),            'cancelado'),
+  (3, 1,  600000, 5,  6, DATE_SUB(CURDATE(), INTERVAL 30 DAY),  DATE_ADD(CURDATE(), INTERVAL 150 DAY),            'ACTIVO'),
+  (1, 1, 1500000, 5,  3, DATE_SUB(CURDATE(), INTERVAL 95 DAY),  DATE_SUB(CURDATE(), INTERVAL 5 DAY),             'ACTIVO');
 
 INSERT INTO pagos (prestamo_id, fecha_pago, monto) VALUES
   (2, DATE_SUB(CURDATE(), INTERVAL 30 DAY),  200000),

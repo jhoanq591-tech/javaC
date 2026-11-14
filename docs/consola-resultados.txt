@@ -1,0 +1,27 @@
+--- TODOS LOS PRESTAMOS (7) ---
+Prestamo #1 | cliente 1 | monto $1000000.0 | interes 5.0% | prestado 2026-11-13 | vence 2027-09-13 | ACTIVO
+Prestamo #2 | cliente 2 | monto $2000000.0 | interes 4.0% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO
+Prestamo #3 | cliente 3 | monto $500000.0 | interes 3.0% | prestado 2026-03-18 | vence 2026-08-15 | pagado
+Prestamo #4 | cliente 1 | monto $300000.0 | interes 5.0% | prestado 2026-11-13 | vence 2027-02-13 | pendiente
+Prestamo #5 | cliente 2 | monto $800000.0 | interes 4.0% | prestado 2026-10-24 | vence 2027-02-21 | cancelado
+Prestamo #6 | cliente 3 | monto $600000.0 | interes 5.0% | prestado 2026-10-14 | vence 2027-04-12 | ACTIVO
+Prestamo #7 | cliente 1 | monto $1500000.0 | interes 5.0% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO
+--- PRESTAMOS ACTIVOS (4) ---
+Prestamo #1 | cliente 1 | monto $1000000.0 | interes 5.0% | prestado 2026-11-13 | vence 2027-09-13 | ACTIVO
+Prestamo #2 | cliente 2 | monto $2000000.0 | interes 4.0% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO
+Prestamo #6 | cliente 3 | monto $600000.0 | interes 5.0% | prestado 2026-10-14 | vence 2027-04-12 | ACTIVO
+Prestamo #7 | cliente 1 | monto $1500000.0 | interes 5.0% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO
+--- PRESTAMOS VENCIDOS (3) ---
+Prestamo #2 | cliente 2 | monto $2000000.0 | interes 4.0% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO
+Prestamo #3 | cliente 3 | monto $500000.0 | interes 3.0% | prestado 2026-03-18 | vence 2026-08-15 | pagado
+Prestamo #7 | cliente 1 | monto $1500000.0 | interes 5.0% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO
+=========== RESUMEN DE PRESTAMOS ===========
+Total de prestamos:        7
+Prestamos activos:         4
+Prestamos vencidos:        3
+Monto total adeudado:      $5.335.000,00
+============================================
+
+[Caso: lista vacia]
+No hay prestamos para resumir (la lista esta vacia).
+No hay prestamos para filtrar (la lista esta vacia).

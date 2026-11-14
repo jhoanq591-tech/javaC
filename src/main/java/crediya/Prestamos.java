@@ -54,12 +54,13 @@ public class Prestamos {
                         // 2. Guardar el prestamo como pendiente
                         double total = monto + (monto * INTERES / 100);
                         PreparedStatement ps = con.prepareStatement(
-                                "INSERT INTO prestamos (cliente_id, monto, interes, cuotas, fecha_inicio, estado) "
-                                + "VALUES (?, ?, ?, ?, CURDATE(), 'pendiente')");
+                                "INSERT INTO prestamos (cliente_id, monto, interes, cuotas, fecha_prestamo, fecha_vencimiento, estado) "
+                                + "VALUES (?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? MONTH), 'pendiente')");
                         ps.setInt(1, clienteId);
                         ps.setDouble(2, monto);
                         ps.setDouble(3, INTERES);
                         ps.setInt(4, cuotas);
+                        ps.setInt(5, cuotas);
                         ps.executeUpdate();
                         System.out.println("Prestamo solicitado. Queda PENDIENTE hasta que lo revise el administrador.");
                         System.out.println("Total a pagar: $" + total);
@@ -95,7 +96,7 @@ public class Prestamos {
 
                     String nuevoEstado = "";
                     if (opcion == 1) {
-                        nuevoEstado = "aprobado";
+                        nuevoEstado = "ACTIVO";
                     } else if (opcion == 2) {
                         nuevoEstado = "cancelado";
                     } else if (opcion == 3) {
@@ -107,8 +108,8 @@ public class Prestamos {
                     } else {
                         // Al aprobar, la fecha de inicio es hoy
                         String sql = "UPDATE prestamos SET estado = ?, empleado_id = ? WHERE id = ?";
-                        if (nuevoEstado.equals("aprobado")) {
-                            sql = "UPDATE prestamos SET estado = ?, empleado_id = ?, fecha_inicio = CURDATE() WHERE id = ?";
+                        if (nuevoEstado.equals("ACTIVO")) {
+                            sql = "UPDATE prestamos SET estado = ?, empleado_id = ?, fecha_prestamo = CURDATE(), fecha_vencimiento = DATE_ADD(CURDATE(), INTERVAL cuotas MONTH) WHERE id = ?";
                         }
                         PreparedStatement ps = con.prepareStatement(sql);
                         ps.setString(1, nuevoEstado);
@@ -151,7 +152,7 @@ public class Prestamos {
     // Muestra los datos de un cliente y todos sus prestamos (la usa tambien el cliente)
     public void mostrarPrestamosDe(int clienteId) {
         String sqlCliente = "SELECT nombre, documento, ingresos FROM clientes WHERE id = ?";
-        String sqlPrestamos = "SELECT p.id, p.monto, p.interes, p.cuotas, p.fecha_inicio, p.estado, "
+        String sqlPrestamos = "SELECT p.id, p.monto, p.interes, p.cuotas, p.fecha_prestamo, p.estado, "
                 + "(SELECT COALESCE(SUM(g.monto), 0) FROM pagos g WHERE g.prestamo_id = p.id) AS pagado "
                 + "FROM prestamos p WHERE p.cliente_id = ? ORDER BY p.id";
 
@@ -177,7 +178,7 @@ public class Prestamos {
                     double total = monto + (monto * rs.getDouble("interes") / 100);
                     double pagado = rs.getDouble("pagado");
                     System.out.println("Prestamo " + rs.getInt("id") + " | " + rs.getString("estado").toUpperCase()
-                            + " | $" + monto + " | " + rs.getInt("cuotas") + " cuotas | desde " + rs.getDate("fecha_inicio")
+                            + " | $" + monto + " | " + rs.getInt("cuotas") + " cuotas | desde " + rs.getDate("fecha_prestamo")
                             + " | total $" + total + " | pagado $" + pagado + " | saldo $" + (total - pagado));
                 }
                 if (!hay) {

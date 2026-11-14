@@ -34,7 +34,7 @@ public class Pagos {
                     System.out.println("No existe un prestamo con ese ID.");
                 } else if (rsPrestamo.getString("estado").equals("pagado")) {
                     System.out.println("Ese prestamo ya esta pagado.");
-                } else if (!rsPrestamo.getString("estado").equals("aprobado")) {
+                } else if (!rsPrestamo.getString("estado").equals("ACTIVO")) {
                     System.out.println("Solo se pueden abonar prestamos aprobados (este esta "
                             + rsPrestamo.getString("estado") + ").");
                 } else {

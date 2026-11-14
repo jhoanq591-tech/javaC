@@ -1,5 +1,6 @@
 package crediya;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -213,6 +214,13 @@ public class Main {
                 break;
             case "2":
                 reportes.listarPrestamosMorosos();
+                break;
+            case "3":
+                GestorPrestamos gestor = new GestorPrestamos();
+                List<Prestamo> todos = gestor.cargarPrestamos();
+                gestor.imprimir("PRESTAMOS ACTIVOS", gestor.filtrarPrestamosActivos(todos));
+                gestor.imprimir("PRESTAMOS VENCIDOS", gestor.filtrarPrestamosVencidos(todos));
+                gestor.mostrarResumen(todos);
                 break;
             default:
                 System.out.println("Opcion invalida.");

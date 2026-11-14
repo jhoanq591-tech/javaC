@@ -8,18 +8,18 @@ public class Reportes {
 
     private Conexion conexion = new Conexion();
 
-    // Prestamos activos = los 'aprobado' que todavia se estan pagando
+    // Prestamos activos = los 'ACTIVO' que todavia se estan pagando
     public void listarPrestamosActivos() {
-        String sql = "SELECT p.id, c.nombre AS cliente, p.monto, p.fecha_inicio "
+        String sql = "SELECT p.id, c.nombre AS cliente, p.monto, p.fecha_prestamo "
                 + "FROM prestamos p JOIN clientes c ON p.cliente_id = c.id "
-                + "WHERE p.estado = 'aprobado'";
+                + "WHERE p.estado = 'ACTIVO'";
         try (Connection con = conexion.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             System.out.println("--- PRESTAMOS ACTIVOS ---");
             while (rs.next()) {
                 System.out.println("Prestamo " + rs.getInt("id") + " | " + rs.getString("cliente")
-                        + " | $" + rs.getDouble("monto") + " | desde " + rs.getDate("fecha_inicio"));
+                        + " | $" + rs.getDouble("monto") + " | desde " + rs.getDate("fecha_prestamo"));
             }
         } catch (Exception e) {
             System.out.println("Error en el reporte: " + e.getMessage());
@@ -28,16 +28,16 @@ public class Reportes {
 
     // Morosos = aprobados que empezaron hace mas de 30 dias
     public void listarPrestamosMorosos() {
-        String sql = "SELECT p.id, c.nombre AS cliente, p.monto, p.fecha_inicio "
+        String sql = "SELECT p.id, c.nombre AS cliente, p.monto, p.fecha_prestamo "
                 + "FROM prestamos p JOIN clientes c ON p.cliente_id = c.id "
-                + "WHERE p.estado = 'aprobado' AND p.fecha_inicio < DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+                + "WHERE p.estado = 'ACTIVO' AND p.fecha_prestamo < DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
         try (Connection con = conexion.conectar();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             System.out.println("--- PRESTAMOS MOROSOS (aprobados con mas de 30 dias) ---");
             while (rs.next()) {
                 System.out.println("Prestamo " + rs.getInt("id") + " | " + rs.getString("cliente")
-                        + " | $" + rs.getDouble("monto") + " | desde " + rs.getDate("fecha_inicio"));
+                        + " | $" + rs.getDouble("monto") + " | desde " + rs.getDate("fecha_prestamo"));
             }
         } catch (Exception e) {
             System.out.println("Error en el reporte: " + e.getMessage());
