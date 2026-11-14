@@ -27,15 +27,21 @@ public class AccionesPrestamos {
         this.clientes = clientes;
     }
 
-    public void crearParaCliente() {
-        solicitar(entrada.leerEntero("ID del cliente: "));
+    public void crearParaCliente(int empleadoId) {
+        int clienteId = entrada.leerEntero("ID del cliente: ");
+        BigDecimal monto = entrada.leerDecimal("Monto del prestamo: ");
+        int cuotas = entrada.leerEntero("Numero de cuotas: ");
+        mostrarResultado(prestamos.crearParaCliente(clienteId, empleadoId, monto, cuotas));
     }
 
     public void solicitar(int clienteId) {
         BigDecimal monto = entrada.leerDecimal("Monto del prestamo: ");
         int cuotas = entrada.leerEntero("Numero de cuotas: ");
-        Prestamo prestamo = prestamos.solicitar(clienteId, monto, cuotas);
-        salida.println("Prestamo solicitado. Queda PENDIENTE hasta que lo revise el administrador.");
+        mostrarResultado(prestamos.solicitar(clienteId, monto, cuotas));
+    }
+
+    private void mostrarResultado(Prestamo prestamo) {
+        salida.println("Prestamo registrado. Queda PENDIENTE hasta que lo revise el administrador.");
         salida.println("Total a pagar: " + Formato.dinero(prestamo.montoTotal()));
         salida.println("Valor de cada cuota: " + Formato.dinero(prestamo.valorCuota()));
     }

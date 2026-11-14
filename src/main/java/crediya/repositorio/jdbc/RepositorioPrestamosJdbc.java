@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class RepositorioPrestamosJdbc extends RepositorioJdbc implements RepositorioPrestamos {
 
-    private static final String SELECCION = "SELECT p.id, p.cliente_id, p.monto, p.interes, p.cuotas, "
+    private static final String SELECCION = "SELECT p.id, p.cliente_id, p.empleado_id, p.monto, p.interes, p.cuotas, "
             + "p.fecha_prestamo, p.fecha_vencimiento, p.estado, "
             + "(SELECT COALESCE(SUM(g.monto), 0) FROM pagos g WHERE g.prestamo_id = p.id) AS pagado "
             + "FROM prestamos p";
@@ -39,9 +39,9 @@ public class RepositorioPrestamosJdbc extends RepositorioJdbc implements Reposit
     @Override
     public int crear(Prestamo prestamo) {
         return insertarConId(
-                "INSERT INTO prestamos (cliente_id, monto, interes, cuotas, fecha_prestamo, fecha_vencimiento, estado) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                prestamo.clienteId(), prestamo.monto(), prestamo.interes(), prestamo.cuotas(),
+                "INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_prestamo, fecha_vencimiento, estado) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                prestamo.clienteId(), prestamo.empleadoId(), prestamo.monto(), prestamo.interes(), prestamo.cuotas(),
                 prestamo.fechaPrestamo(), prestamo.fechaVencimiento(), prestamo.estado().name());
     }
 
@@ -62,6 +62,7 @@ public class RepositorioPrestamosJdbc extends RepositorioJdbc implements Reposit
         return new Prestamo(
                 fila.getInt("id"),
                 fila.getInt("cliente_id"),
+                fila.getObject("empleado_id", Integer.class),
                 fila.getBigDecimal("monto"),
                 fila.getBigDecimal("interes"),
                 fila.getInt("cuotas"),

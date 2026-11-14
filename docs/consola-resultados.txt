@@ -9,21 +9,24 @@ Documento: Clave: Bienvenido, Laura Gomez.
 3. Prestamos
 4. Pagos
 5. Reportes
+6. Archivos de respaldo
 0. Cerrar sesion
 -- REPORTES --
 1. Prestamos activos
 2. Prestamos morosos
-3. Gestor de prestamos (activos, vencidos y resumen)
+3. Clientes morosos
+4. Directorio de personas (clientes y empleados)
+5. Gestor de prestamos (activos, vencidos y resumen)
 0. Volver
 --- PRESTAMOS ACTIVOS (4) ---
-Prestamo #1 | cliente 1 | monto $1.000.000,00 | interes 5.00% | prestado 2026-11-13 | vence 2027-09-13 | ACTIVO | saldo $1.050.000,00
-Prestamo #2 | cliente 2 | monto $2.000.000,00 | interes 4.00% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO | saldo $1.880.000,00
-Prestamo #6 | cliente 3 | monto $600.000,00 | interes 5.00% | prestado 2026-10-14 | vence 2027-04-12 | ACTIVO | saldo $630.000,00
-Prestamo #7 | cliente 1 | monto $1.500.000,00 | interes 5.00% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO | saldo $1.575.000,00
+Prestamo #1 | cliente 1 | empleado 1 | monto $1.000.000,00 | interes 5.00% | prestado 2026-11-13 | vence 2027-09-13 | ACTIVO | saldo $1.050.000,00
+Prestamo #2 | cliente 2 | empleado 1 | monto $2.000.000,00 | interes 4.00% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO | saldo $1.880.000,00
+Prestamo #6 | cliente 3 | empleado 1 | monto $600.000,00 | interes 5.00% | prestado 2026-10-14 | vence 2027-04-12 | ACTIVO | saldo $630.000,00
+Prestamo #7 | cliente 1 | empleado 1 | monto $1.500.000,00 | interes 5.00% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO | saldo $1.575.000,00
 --- PRESTAMOS VENCIDOS (3) ---
-Prestamo #2 | cliente 2 | monto $2.000.000,00 | interes 4.00% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO | saldo $1.880.000,00
-Prestamo #3 | cliente 3 | monto $500.000,00 | interes 3.00% | prestado 2026-03-18 | vence 2026-08-15 | PAGADO | saldo $0,00
-Prestamo #7 | cliente 1 | monto $1.500.000,00 | interes 5.00% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO | saldo $1.575.000,00
+Prestamo #2 | cliente 2 | empleado 1 | monto $2.000.000,00 | interes 4.00% | prestado 2025-10-19 | vence 2026-10-14 | ACTIVO | saldo $1.880.000,00
+Prestamo #3 | cliente 3 | empleado 1 | monto $500.000,00 | interes 3.00% | prestado 2026-03-18 | vence 2026-08-15 | PAGADO | saldo $0,00
+Prestamo #7 | cliente 1 | empleado 1 | monto $1.500.000,00 | interes 5.00% | prestado 2026-08-10 | vence 2026-11-08 | ACTIVO | saldo $1.575.000,00
 =========== RESUMEN DE PRESTAMOS ===========
 Total de prestamos:   7
 Prestamos activos:    4
@@ -33,7 +36,9 @@ Monto total adeudado: $5.135.000,00
 -- REPORTES --
 1. Prestamos activos
 2. Prestamos morosos
-3. Gestor de prestamos (activos, vencidos y resumen)
+3. Clientes morosos
+4. Directorio de personas (clientes y empleados)
+5. Gestor de prestamos (activos, vencidos y resumen)
 0. Volver
 ----- MENU ADMINISTRADOR -----
 1. Empleados
@@ -41,6 +46,7 @@ Monto total adeudado: $5.135.000,00
 3. Prestamos
 4. Pagos
 5. Reportes
+6. Archivos de respaldo
 0. Cerrar sesion
 Sesion cerrada.
 ===== CREDIYA S.A.S. =====

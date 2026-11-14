@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public class PrestamosEnMemoria implements RepositorioPrestamos {
 
@@ -44,17 +45,17 @@ public class PrestamosEnMemoria implements RepositorioPrestamos {
 
     @Override
     public void aprobar(int id, int empleadoId, LocalDate fechaPrestamo, LocalDate fechaVencimiento) {
-        reemplazar(id, p -> new Prestamo(id, p.clienteId(), p.monto(), p.interes(), p.cuotas(),
+        reemplazar(id, p -> new Prestamo(id, p.clienteId(), empleadoId, p.monto(), p.interes(), p.cuotas(),
                 fechaPrestamo, fechaVencimiento, EstadoPrestamo.ACTIVO, p.pagado()));
     }
 
     @Override
     public void cambiarEstado(int id, EstadoPrestamo estado, int empleadoId) {
-        reemplazar(id, p -> new Prestamo(id, p.clienteId(), p.monto(), p.interes(), p.cuotas(),
+        reemplazar(id, p -> new Prestamo(id, p.clienteId(), empleadoId, p.monto(), p.interes(), p.cuotas(),
                 p.fechaPrestamo(), p.fechaVencimiento(), estado, p.pagado()));
     }
 
-    private void reemplazar(int id, java.util.function.UnaryOperator<Prestamo> cambio) {
+    private void reemplazar(int id, UnaryOperator<Prestamo> cambio) {
         for (int i = 0; i < datos.size(); i++) {
             if (datos.get(i).id() == id) {
                 datos.set(i, cambio.apply(datos.get(i)));

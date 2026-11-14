@@ -1,0 +1,3 @@
+--- CLIENTES MOROSOS ---
+Ana Torres | documento 2002 | 1 prestamo(s) en mora | saldo en mora $1.880.000,00
+Carlos Ruiz | documento 2001 | 1 prestamo(s) en mora | saldo en mora $1.575.000,00

@@ -21,7 +21,7 @@ public final class Datos {
 
     public static Prestamo prestamo(int id, EstadoPrestamo estado, LocalDate prestado, LocalDate vence,
                                     String monto, String pagado) {
-        return new Prestamo(id, 1, new BigDecimal(monto), new BigDecimal("5.00"), 10,
+        return new Prestamo(id, 1, null, new BigDecimal(monto), new BigDecimal("5.00"), 10,
                 prestado, vence, estado, new BigDecimal(pagado));
     }
 }

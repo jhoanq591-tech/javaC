@@ -2,7 +2,6 @@ package crediya.consola;
 
 import crediya.modelo.Empleado;
 import crediya.servicio.ServicioEmpleados;
-import crediya.util.Formato;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -41,7 +40,6 @@ public class AccionesEmpleados {
         if (lista.isEmpty()) {
             salida.println("(sin empleados)");
         }
-        lista.forEach(e -> salida.println(e.id() + " | " + e.nombre() + " | " + e.documento()
-                + " | " + e.rol() + " | " + e.correo() + " | " + Formato.dinero(e.salario())));
+        lista.forEach(e -> salida.println(e.descripcion()));
     }
 }

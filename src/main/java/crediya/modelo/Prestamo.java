@@ -9,6 +9,7 @@ import java.util.Objects;
 public record Prestamo(
         int id,
         int clienteId,
+        Integer empleadoId,
         BigDecimal monto,
         BigDecimal interes,
         int cuotas,
@@ -54,13 +55,14 @@ public record Prestamo(
     }
 
     public Prestamo conId(int nuevoId) {
-        return new Prestamo(nuevoId, clienteId, monto, interes, cuotas,
+        return new Prestamo(nuevoId, clienteId, empleadoId, monto, interes, cuotas,
                 fechaPrestamo, fechaVencimiento, estado, pagado);
     }
 
     @Override
     public String toString() {
         return "Prestamo #" + id + " | cliente " + clienteId
+                + " | empleado " + (empleadoId == null ? "-" : empleadoId)
                 + " | monto " + Formato.dinero(monto)
                 + " | interes " + interes + "%"
                 + " | prestado " + fechaPrestamo

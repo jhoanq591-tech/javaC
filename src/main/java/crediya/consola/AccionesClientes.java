@@ -2,7 +2,6 @@ package crediya.consola;
 
 import crediya.modelo.Cliente;
 import crediya.servicio.ServicioClientes;
-import crediya.util.Formato;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -41,7 +40,6 @@ public class AccionesClientes {
         if (lista.isEmpty()) {
             salida.println("(sin clientes)");
         }
-        lista.forEach(c -> salida.println(c.id() + " | " + c.nombre() + " | " + c.documento()
-                + " | " + c.correo() + " | " + c.telefono() + " | ingresos " + Formato.dinero(c.ingresos())));
+        lista.forEach(c -> salida.println(c.descripcion()));
     }
 }

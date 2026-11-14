@@ -23,6 +23,7 @@ La conexión se lee de variables de entorno. Si no existen, se usa `jdbc:mysql:/
 | `DB_URL` | URL JDBC, por ejemplo `jdbc:mysql://localhost:3306/crediya_db` |
 | `DB_USER` | usuario de MySQL |
 | `DB_PASSWORD` | clave de MySQL |
+| `CREDIYA_DATOS` | carpeta de los archivos de respaldo CSV (por defecto `datos`) |
 
 En producción conviene un usuario con permisos mínimos en lugar de `root`:
 ```sql
@@ -59,7 +60,8 @@ Las claves nuevas exigen entre 8 y 64 caracteres. Las de ejemplo son débiles a 
 - Interés fijo del 5 %: total = monto + monto × interés / 100; cuota = total / cuotas.
 - Un cliente no puede pedir más de 5 veces sus ingresos; las cuotas van de 1 a 120.
 - Solo se abonan préstamos `ACTIVO`; el abono no puede superar el saldo; al llegar el saldo a cero el préstamo pasa a `PAGADO` (en una sola transacción).
-- Moroso = `ACTIVO` con más de 30 días desde su inicio.
+- Moroso = `ACTIVO` con más de 30 días desde su inicio. El reporte de clientes morosos agrupa esos préstamos por cliente (cantidad y saldo en mora, de mayor a menor).
+- Un préstamo creado por el administrador queda asociado a ese empleado; el solicitado por el cliente queda sin empleado hasta que el administrador lo apruebe o lo decida.
 
 ## Etapa 2: GestorPrestamos
 Clase `crediya.servicio.GestorPrestamos`, sobre el modelo `crediya.modelo.Prestamo` (id, cliente_id, monto, interes, fecha_prestamo, fecha_vencimiento, estado).
@@ -78,6 +80,7 @@ Clase `crediya.servicio.GestorPrestamos`, sobre el modelo `crediya.modelo.Presta
 
 ### Capturas de consola
 - `docs/consola-resultados.txt`: filtrado y resumen.
+- `docs/consola-clientes-morosos-y-directorio.txt`: clientes morosos y directorio de personas.
 - `docs/consola-error-conexion.txt`: caso de error de conexión.
 
 ```
@@ -94,9 +97,11 @@ Monto total adeudado: $5.135.000,00
 crediya
 ├── Main                      raíz de composición: crea y conecta todo
 ├── configuracion             ProveedorConexion (interfaz), ConexionMySql, ConfiguracionBaseDatos
-├── modelo                    Prestamo, Cliente, Empleado, Pago, Credencial, EstadoPrestamo, Rol
+├── modelo                    Persona (abstracta) -> Cliente, Empleado; Prestamo, Pago, Credencial, EstadoPrestamo, Rol
+├── archivo                   persistencia en CSV: AlmacenArchivo, AlmacenCsv, Csv, Sincronizador
 ├── repositorio               interfaces de acceso a datos
-│   └── jdbc                  implementaciones JDBC (consultas parametrizadas)
+│   ├── jdbc                  implementaciones JDBC (consultas parametrizadas)
+│   └── archivo               decoradores que además de la BD actualizan el CSV
 ├── servicio                  reglas de negocio, GestorPrestamos, validaciones
 ├── seguridad                 HasheadorClaves (interfaz) y HasheadorPbkdf2
 ├── consola                   menús y entrada/salida de usuario
@@ -108,6 +113,17 @@ crediya
 - **L (Liskov):** cualquier implementación de un repositorio sirve donde se pide su interfaz (las pruebas usan versiones en memoria).
 - **I (segregación de interfaces):** interfaces pequeñas por tema (`RepositorioCredenciales` aparte de `RepositorioClientes`).
 - **D (inversión de dependencias):** los servicios dependen de interfaces, no de JDBC; las dependencias y el `Clock` se inyectan desde `Main`.
+
+## Persistencia en archivo y base de datos
+Empleados y préstamos se guardan en MySQL y, además, en archivos CSV (`datos/empleados.csv` y `datos/prestamos.csv`).
+- Patrón Decorator: `RepositorioEmpleadosConArchivo`, `RepositorioPrestamosConArchivo` y `RepositorioPagosConArchivo` envuelven al repositorio JDBC y reescriben el CSV después de cada cambio (los abonos también, porque cambian el saldo y el estado del préstamo).
+- Escritura atómica (archivo temporal + reemplazo): un fallo a mitad no deja el CSV corrupto.
+- Los CSV nunca incluyen claves ni hashes, y los textos que empiezan por `=`, `+`, `-` o `@` se neutralizan para evitar inyección de fórmulas al abrirlos en Excel.
+- Menú administrador → `6. Archivos de respaldo`: sincronizar ahora y ver el contenido de cada archivo (lectura con detección de líneas dañadas).
+- La carpeta `datos/` está en `.gitignore` porque contiene datos personales.
+
+## Herencia y polimorfismo
+`Persona` (abstracta: id, nombre, documento, correo) define `tipo()` y `descripcion()`. `Cliente` (teléfono, ingresos) y `Empleado` (rol, salario) la extienden e implementan cada uno a su manera. El reporte `Directorio de personas` trata a clientes y empleados como `List<Persona>` y cada uno se describe a sí mismo.
 
 ## Seguridad y buenas prácticas
 - Todas las consultas usan `PreparedStatement` (sin concatenar texto: protegido contra inyección SQL).

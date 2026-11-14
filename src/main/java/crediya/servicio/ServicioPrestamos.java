@@ -32,6 +32,14 @@ public class ServicioPrestamos {
     }
 
     public Prestamo solicitar(int clienteId, BigDecimal monto, int cuotas) {
+        return registrar(clienteId, null, monto, cuotas);
+    }
+
+    public Prestamo crearParaCliente(int clienteId, int empleadoId, BigDecimal monto, int cuotas) {
+        return registrar(clienteId, empleadoId, monto, cuotas);
+    }
+
+    private Prestamo registrar(int clienteId, Integer empleadoId, BigDecimal monto, int cuotas) {
         Validaciones.montoPositivo(monto, "El monto");
         if (cuotas < 1 || cuotas > MAXIMO_CUOTAS) {
             throw new ErrorDeNegocio("Las cuotas deben estar entre 1 y " + MAXIMO_CUOTAS + ".");
@@ -44,7 +52,7 @@ public class ServicioPrestamos {
                     + Formato.dinero(maximo) + ").");
         }
         LocalDate hoy = LocalDate.now(reloj);
-        Prestamo nuevo = new Prestamo(0, clienteId, monto.setScale(2, RoundingMode.HALF_UP), INTERES, cuotas,
+        Prestamo nuevo = new Prestamo(0, clienteId, empleadoId, monto.setScale(2, RoundingMode.HALF_UP), INTERES, cuotas,
                 hoy, hoy.plusMonths(cuotas), EstadoPrestamo.PENDIENTE, BigDecimal.ZERO);
         return nuevo.conId(prestamos.crear(nuevo));
     }

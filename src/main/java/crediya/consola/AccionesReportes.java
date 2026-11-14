@@ -1,8 +1,11 @@
 package crediya.consola;
 
+import crediya.modelo.Persona;
 import crediya.modelo.Prestamo;
+import crediya.servicio.ClienteMoroso;
 import crediya.servicio.GestorPrestamos;
 import crediya.servicio.LineaReporte;
+import crediya.servicio.ServicioDirectorio;
 import crediya.servicio.ServicioReportes;
 import crediya.util.Formato;
 import java.io.PrintStream;
@@ -13,11 +16,14 @@ public class AccionesReportes {
     private final PrintStream salida;
     private final ServicioReportes reportes;
     private final GestorPrestamos gestor;
+    private final ServicioDirectorio directorio;
 
-    public AccionesReportes(PrintStream salida, ServicioReportes reportes, GestorPrestamos gestor) {
+    public AccionesReportes(PrintStream salida, ServicioReportes reportes, GestorPrestamos gestor,
+                            ServicioDirectorio directorio) {
         this.salida = salida;
         this.reportes = reportes;
         this.gestor = gestor;
+        this.directorio = directorio;
     }
 
     public void prestamosActivos() {
@@ -26,6 +32,23 @@ public class AccionesReportes {
 
     public void prestamosMorosos() {
         imprimir("PRESTAMOS MOROSOS (activos con mas de 30 dias)", reportes.prestamosMorosos());
+    }
+
+    public void clientesMorosos() {
+        List<ClienteMoroso> morosos = reportes.clientesMorosos();
+        salida.println("--- CLIENTES MOROSOS ---");
+        if (morosos.isEmpty()) {
+            salida.println("(ninguno)");
+        }
+        morosos.forEach(m -> salida.println(m.cliente().nombre() + " | documento " + m.cliente().documento()
+                + " | " + m.prestamosEnMora() + " prestamo(s) en mora | saldo en mora "
+                + Formato.dinero(m.saldoEnMora())));
+    }
+
+    public void directorio() {
+        List<Persona> personas = directorio.listar();
+        salida.println("--- DIRECTORIO DE PERSONAS (" + personas.size() + ") ---");
+        personas.forEach(p -> salida.println(p.tipo() + " | " + p.descripcion()));
     }
 
     public void gestorDePrestamos() {
