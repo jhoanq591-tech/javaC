@@ -1,0 +1,10 @@
+===== CREDIYA S.A.S. =====
+1. Ingresar como cliente
+2. Ingresar como administrador
+0. Salir
+No se pudo conectar a la base de datos. Verifique que MySQL este encendido y que la configuracion de conexion sea correcta.
+===== CREDIYA S.A.S. =====
+1. Ingresar como cliente
+2. Ingresar como administrador
+0. Salir
+Hasta pronto.
